@@ -72,20 +72,17 @@ def postprocess(prediction, num_classes, conf_thre=0.7, nms_thre=0.45, class_agn
                 nms_thre,
             )
 
-        print(detections.shape, features.shape)
-        detections = detections[nms_out_index]
-        features = features[nms_out_index]
 
-        print(detections)
-        print(detections.shape, features.shape)
+        detections = detections[nms_out_index]
+        features = features[nms_out_index] # Omezeni features jen na relevantni detekce
+        detections =torch.cat((detections, features), dim=1) # Spojeni detections a features.
+        # detection == Tensor[x1, y1, x2, y2, obj_score, class_score, class, features (256 binu)]
 
         if output[i] is None:
             output[i] = detections
         else:
             output[i] = torch.cat((output[i], detections))
-
-        print(output)
-
+            
     return output
 
 
