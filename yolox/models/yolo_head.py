@@ -151,9 +151,8 @@ class YOLOXHead(nn.Module):
         for k, (cls_conv, reg_conv, stride_this_level, x) in enumerate(
             zip(self.cls_convs, self.reg_convs, self.strides, xin)
         ):
-
-            flatten_features_k[k] = x[k].flatten(start_dim=2) # zplosteni a ulozeni aktualnich features -- v aktualni urovni
             x = self.stems[k](x)
+            flatten_features_k[k] = x.flatten(start_dim=2) # zplosteni a ulozeni aktualnich features -- v aktualni urovni
             cls_x = x
             reg_x = x
 
@@ -191,7 +190,6 @@ class YOLOXHead(nn.Module):
                 output = torch.cat(
                     [reg_output, obj_output.sigmoid(), cls_output.sigmoid()], 1
                 )
-
             outputs.append(output)
 
         if self.training:
@@ -207,12 +205,14 @@ class YOLOXHead(nn.Module):
             )
         else:
             self.hw = [x.shape[-2:] for x in outputs]
-            flatten_features = torch.cat([x for x in flatten_features_k], dim=2) # spojeni vsech feature do jednoho tensoru
+            #flatten_features = torch.cat([x for x in flatten_features_k], dim=2) # spojeni vsech feature do jednoho tensoru
             # [batch, n_anchors_all, 85]
             outputs = torch.cat(
                 [x.flatten(start_dim=2) for x in outputs], dim=2
             ).permute(0, 2, 1)
-            outputs = torch.cat([outputs, flatten_features.permute(0, 2, 1)], dim=2)  # pridani featur k outputum [batch, n_anchors_all, channels + channels_pan_out]
+            flatten_features = torch.cat([x.flatten(start_dim=2) for x in flatten_features_k], dim=2).permute(0,2,1)
+            outputs = torch.cat([outputs, flatten_features], dim=2) 
+            #outputs = torch.cat([outputs, flatten_features.permute(0, 2, 1)], dim=2)  # pridani featur k outputum [batch, n_anchors_all, channels + channels_pan_out]
             if self.decode_in_inference:
                 return self.decode_outputs(outputs, dtype=xin[0].type())
             else:

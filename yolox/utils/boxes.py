@@ -30,6 +30,9 @@ def filter_box(output, scale_range):
 
 
 def postprocess(prediction, num_classes, conf_thre=0.7, nms_thre=0.45, class_agnostic=False):
+    features_batch = prediction[:,:,85:]
+    prediction = prediction[:,:, :85]
+ 
     box_corner = prediction.new(prediction.shape)
     box_corner[:, :, 0] = prediction[:, :, 0] - prediction[:, :, 2] / 2
     box_corner[:, :, 1] = prediction[:, :, 1] - prediction[:, :, 3] / 2
@@ -38,7 +41,8 @@ def postprocess(prediction, num_classes, conf_thre=0.7, nms_thre=0.45, class_agn
     prediction[:, :, :4] = box_corner[:, :, :4]
 
     output = [None for _ in range(len(prediction))]
-    for i, image_pred in enumerate(prediction):
+    # FOR cyklus pres batch
+    for i, (image_pred, features) in enumerate(zip(prediction, features_batch)):
 
         # If none are remaining => process next image
         if not image_pred.size(0):
@@ -50,6 +54,7 @@ def postprocess(prediction, num_classes, conf_thre=0.7, nms_thre=0.45, class_agn
         # Detections ordered as (x1, y1, x2, y2, obj_conf, class_conf, class_pred)
         detections = torch.cat((image_pred[:, :5], class_conf, class_pred.float()), 1)
         detections = detections[conf_mask]
+        features = features[conf_mask]
         if not detections.size(0):
             continue
 
@@ -67,11 +72,19 @@ def postprocess(prediction, num_classes, conf_thre=0.7, nms_thre=0.45, class_agn
                 nms_thre,
             )
 
+        print(detections.shape, features.shape)
         detections = detections[nms_out_index]
+        features = features[nms_out_index]
+
+        print(detections)
+        print(detections.shape, features.shape)
+
         if output[i] is None:
             output[i] = detections
         else:
             output[i] = torch.cat((output[i], detections))
+
+        print(output)
 
     return output
 
