@@ -210,7 +210,10 @@ class YOLOXHead(nn.Module):
             outputs = torch.cat(
                 [x.flatten(start_dim=2) for x in outputs], dim=2
             ).permute(0, 2, 1)
-            flatten_features = torch.cat([x.flatten(start_dim=2) for x in flatten_features_k], dim=2).permute(0,2,1)
+            flatten_features = torch.cat(
+                [x.view(x.shape[0], x.shape[1], -1) for x in flatten_features_k], dim=2
+            ).permute(0, 2, 1)
+            #flatten_features = torch.cat([x.flatten(start_dim=2) for x in flatten_features_k], dim=2).permute(0,2,1)
             outputs = torch.cat([outputs, flatten_features], dim=2) 
             #outputs = torch.cat([outputs, flatten_features.permute(0, 2, 1)], dim=2)  # pridani featur k outputum [batch, n_anchors_all, channels + channels_pan_out]
             if self.decode_in_inference:
