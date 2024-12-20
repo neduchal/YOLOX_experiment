@@ -42,7 +42,6 @@ class CalibDatasetClass:
         image_tensor = image_tensor.float()
         image_tensor = image_tensor.cuda()
 
-        #image_tensor = torch.from_numpy(image_np).permute(2, 0, 1)
         return image_tensor
     
     def __len__(self):
@@ -53,7 +52,7 @@ class CalibDatasetClass:
         """
         Vrátí obrázek na zadaném indexu s batch dimenzí.
         :param idx: Index obrázku.
-        :return: Tensor obrázku s dimenzí [1, C, H, W].
+        :return: Tensor obrázku ve tvaru vhodnem pro síť yolox
         """
         image = self.images[idx]
         return [image.unsqueeze(0)]  # Přidá batch dimenzi    
