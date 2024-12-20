@@ -19,7 +19,7 @@ tools/process.py
 docker/Dockerfile
 ```
 
-# Instalace a spuštění základní sítě 
+## Instalace a spuštění základní sítě 
 <details>
 <summary>Installation</summary>
 
@@ -55,7 +55,7 @@ python tools/process.py process -n yolox-l -c /path/to/your/yolox_l.pth --path /
 ```
 </details>
 
-# Převod do TRT
+## Převod do TRT
 
    If you want to convert our model, use the flag -n to specify a model name:
    ```shell
@@ -67,7 +67,7 @@ python tools/process.py process -n yolox-l -c /path/to/your/yolox_l.pth --path /
    ```
    <YOLOX_MODEL_NAME> can be: yolox-nano, yolox-tiny. yolox-s, yolox-m, yolox-l, yolox-x.
 
-# Převod do TRT INT8
+## Převod do TRT INT8
 
 If you want to convert our model, use the flag -n to specify a model name:
 ```shell
