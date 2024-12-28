@@ -19,6 +19,9 @@ class Exp(MyExp):
         self.val_ann = "instances_valid.json"
         self.test_ann = "instances_test.json"
 
+        self.data_num_workers = 1
+        self.max_epoch = 10
+
     def get_dataset(self, cache: bool = False, cache_type: str = "ram"):
         """
         Get dataset according to cache and cache_type parameters.
