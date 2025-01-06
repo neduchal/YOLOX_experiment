@@ -21,7 +21,7 @@ class Exp(MyExp):
         self.test_ann = "instances_test.json"
 
         self.data_num_workers = 1
-        self.max_epoch = 10
+        self.max_epoch = 100
 
     def get_dataset(self, cache: bool = False, cache_type: str = "ram"):
         """
