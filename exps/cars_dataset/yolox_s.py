@@ -45,3 +45,16 @@ class Exp(MyExp):
             cache=cache,
             cache_type=cache_type,
         )
+    
+    def get_eval_dataset(self, **kwargs):
+        from yolox.data import CarsDataset, ValTransform
+        testdev = kwargs.get("testdev", False)
+        legacy = kwargs.get("legacy", False)
+
+        return CarsDataset(
+            data_dir=self.data_dir,
+            json_file=self.val_ann if not testdev else self.test_ann,
+            name="valid" if not testdev else "test",
+            img_size=self.test_size,
+            preproc=ValTransform(legacy=legacy),
+        )
