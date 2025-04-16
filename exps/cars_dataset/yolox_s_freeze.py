@@ -20,7 +20,7 @@ class Exp(MyExp):
         self.val_ann = "instances_valid.json"
         self.test_ann = "instances_test.json"
 
-        self.exp_name = "cars_dataset_s"
+        self.exp_name = "cars_dataset_freeze"
         self.data_num_workers = 1
         self.max_epoch = 10
 
@@ -60,3 +60,9 @@ class Exp(MyExp):
             img_size=self.test_size,
             preproc=ValTransform(legacy=legacy),
         )
+    
+    def get_model(self):
+        from yolox.utils import freeze_module
+        model = super().get_model()
+        freeze_module(model.backbone.backbone)
+        return model

@@ -15,14 +15,16 @@ class Exp(MyExp):
         self.width = 0.50
         self.exp_name = os.path.split(os.path.realpath(__file__))[1].split(".")[0]
 
-        self.data_dir = "datasets/CarsDataset"
-        self.train_ann = "instances_train.json"
-        self.val_ann = "instances_valid.json"
-        self.test_ann = "instances_test.json"
+        self.data_dir = "datasets/MultiDataset1"
+        self.train_ann = "train.json"
+        self.val_ann = "val.json"
+        self.test_ann = "test.json"
+        self.exp_name = "multi_dataset_1_s_50"
 
-        self.exp_name = "cars_dataset_s"
         self.data_num_workers = 1
-        self.max_epoch = 10
+        self.max_epoch = 50
+        self.warmup_epochs = 1
+        self.test_conf = 0.3
 
     def get_dataset(self, cache: bool = False, cache_type: str = "ram"):
         """
@@ -56,7 +58,7 @@ class Exp(MyExp):
         return CarsDataset(
             data_dir=self.data_dir,
             json_file=self.val_ann if not testdev else self.test_ann,
-            name="valid" if not testdev else "test",
+            name="val" if not testdev else "test",
             img_size=self.test_size,
             preproc=ValTransform(legacy=legacy),
         )
