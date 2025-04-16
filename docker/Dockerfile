@@ -2,7 +2,6 @@ FROM nvcr.io/nvidia/pytorch:23.08-py3
 
 RUN apt update && apt install -y htop mc
 RUN apt install -y git
-# YOLOX
 #RUN cd /workspace/ && git clone https://github.com/Megvii-BaseDetection/YOLOX.git
 RUN cd /workspace/ && git clone https://github.com/neduchal/YOLOX_experiment.git YOLOX
 RUN cd /workspace/YOLOX &&  pip3 install -v -e .
